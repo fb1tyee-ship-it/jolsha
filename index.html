@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ভিডিও লিস্ট</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 10px; background: #f7f7f7; }
+    h1 { text-align: center; }
+    .video-list { display: flex; flex-direction: column; gap: 10px; max-width: 600px; margin: 0 auto; }
+    .video-item { background: #fff; border-radius: 6px; padding: 10px; box-shadow: 0 0 5px rgba(0,0,0,0.1); display: flex; align-items: center; cursor: pointer; }
+    .video-item img { width: 120px; height: 70px; object-fit: cover; border-radius: 4px; margin-right: 10px; }
+    .video-info { flex: 1; }
+    .video-title { font-weight: bold; font-size: 1rem; margin: 0 0 5px; }
+    .video-date { font-size: 0.85rem; color: #666; }
+  </style>
+</head>
+<body>
+
+<h1>ভিডিও লিস্ট</h1>
+<div id="videoList" class="video-list">
+  <p>লোড হচ্ছে...</p>
+</div>
+
+<script>
+  const videoListDiv = document.getElementById('videoList');
+
+  fetch('http://160.25.7.148/videos1.php')
+    .then(res => {
+      if (!res.ok) throw new Error('Failed to fetch');
+      return res.json();
+    })
+    .then(videos => {
+      if (!videos.length) {
+        videoListDiv.innerHTML = '<p>কোনো ভিডিও পাওয়া যায়নি।</p>';
+        return;
+      }
+
+      videoListDiv.innerHTML = '';
+      videos.forEach(video => {
+        const videoItem = document.createElement('div');
+        videoItem.className = 'video-item';
+
+        videoItem.innerHTML = `
+          <img src="${video.thumbnailUrl || 'https://via.placeholder.com/120x70?text=No+Image'}" alt="${video.title}" />
+          <div class="video-info">
+            <p class="video-title">${video.title}</p>
+            <p class="video-date">${video.uploadDate}</p>
+          </div>
+        `;
+
+        videoItem.onclick = () => {
+          // নতুন পেজে ভিডিও প্লে পেজে পাঠাবে
+          const videoPageUrl = `video.html?video=${encodeURIComponent(video.videoUrl)}&title=${encodeURIComponent(video.title)}`;
+          window.location.href = videoPageUrl;
+        };
+
+        videoListDiv.appendChild(videoItem);
+      });
+    })
+    .catch(err => {
+      videoListDiv.innerHTML = '<p>ভিডিও লোড করতে সমস্যা: ' + err.message + '</p>';
+    });
+</script>
+
+</body>
+</html>

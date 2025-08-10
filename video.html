@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ভিডিও প্লেয়ার</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 10px; background: #fff; }
+    h1 { text-align: center; }
+    video { display: block; max-width: 100%; margin: 20px auto; border-radius: 8px; }
+    a.back { display: block; text-align: center; margin-top: 20px; color: #007bff; text-decoration: none; }
+    a.back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<h1 id="videoTitle">ভিডিও প্লেয়ার</h1>
+
+<video id="videoPlayer" controls>
+  <source id="videoSource" src="" type="video/mp4" />
+  আপনার ব্রাউজার ভিডিও প্লে করতে পারে না।
+</video>
+
+<a href="index.html" class="back">← ভিডিও লিস্টে ফিরে যাও</a>
+
+<script>
+  // URL থেকে videoUrl এবং title নিয়ে আসা
+  const params = new URLSearchParams(window.location.search);
+  const videoUrl = params.get('video');
+  const title = params.get('title');
+
+  const videoPlayer = document.getElementById('videoPlayer');
+  const videoSource = document.getElementById('videoSource');
+  const videoTitle = document.getElementById('videoTitle');
+
+  if (videoUrl) {
+    videoSource.src = videoUrl;
+    videoPlayer.load();
+  }
+
+  if (title) {
+    videoTitle.textContent = decodeURIComponent(title);
+  }
+</script>
+
+</body>
+</html>
